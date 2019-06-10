@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<table th:fragment="itemsFactura" class="d-none">
+
+		<tbody id="plantillaItemsFactura">
+			<tr id="row_{ID}">
+				<td class="d-none"><input type="hidden" value="{ID}" name="item_id[]"/></td>
+				<td>{NOMBRE}</td>
+				<td>{PRECIO}</td>
+				<td><input type="number" min="1" onchange="itemsHelper.calcularTotal({ID},{PRECIO},this.value);" value="1" name="cantidad[]" id="cantidad_{ID}" class="form-control col-sm-4"/></td>
+				<td>$<span id="total_importe_{ID}">0</span></td>
+				<td class="text-center"><button type="button" onclick="itemsHelper.deleteLinea({ID});" class="btn btn-danger btn-sm">x</button></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

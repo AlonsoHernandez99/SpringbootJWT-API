@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	   xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+<meta charset="UTF-8" />
+<title th:text="${titulo}"></title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+</head>
+<body>
+	<header th:fragment="header">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+			<a class="navbar-brand" href="#">Spring Boot</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarSupportedContent"
+				aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active"><a class="nav-link" href="#">Home
+							<span class="sr-only">(current)</span>
+					</a></li>
+					<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a></li>
+				</ul>
+				<ul class="navbar-nav navbar-rigth">
+					<li sec:authorize="!isAuthenticated()"><a th:href="@{/login}" class="btn btn-primary">Iniciar sesión</a></li>
+
+					<!-- Formulario para cerrar sesion -->
+					<li class="btn-group dropleft" sec:authorize="isAuthenticated()">
+						<button type="button" class="btn btn-primary dropdown-toggle"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span sec:authentication="name"></span>
+						</button>
+						<div class="dropdown-menu">
+							<form th:action="@{/logout}" method="POST" id="logoutForm">
+								<button class="dropdown-item"
+									onclick="document.getElementById('logoutForm').submit();"
+									type="submit">Cerrar sesión</button>
+							</form>
+						</div>
+					</li>
+				</ul>
+				<ul class="navbar-nav navbar-rigth mx-4">
+					<li class="nav-item dropdown show">
+						<button type="button" class="btn btn-link dropdown-toggle"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span th:text="#{text.locale.language}"></span>
+						</button>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" th:href="@{/locale(lang=es_ES)}" th:text="#{text.locale.es}">ES</a>
+						    <a class="dropdown-item" th:href="@{/locale(lang=en_US)}" th:text="#{text.locale.en}">EN</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<div class="alert alert-success" role="alert" th:if="${success != null}" th:text="${success}"></div>
+		<div class="alert alert-danger" role="alert" th:if="${error != null}" th:text="${error}"></div>
+		<div class="alert alert-warning" role="alert" th:if="${warning != null}" th:text="${warning}"></div>
+		<div class="alert alert-info" role="alert" th:if="${info != null}" th:text="${info}"></div>
+	</header>
+	<div class="container mt-3"></div>
+	<footer th:fragment="footer" class="container mt-5">
+		<img alt="springboot" width="150" class="img-responsive" th:src="@{/images/logo.png}"> &copy; All Rigth Reserved 2019
+		
+		<!-- Mostrando Datos del Usuario Logeado -->
+		
+		<p sec:authorize="isAuthenticated()">
+		   Usuario Logeado : <span sec:authentication="name"></span> |
+		   Roles: <span sec:authentication="principal.authorities"></span>
+		
+		</p>
+		<!-- Loading JS Boostrap Files for all template -->
+		<script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" th:src="@{/js/jquery-ui.min.js}"></script>
+	</footer>
+</body>
+</html>

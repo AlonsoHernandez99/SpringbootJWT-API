@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head">
+</head>
+<header th:replace="layout/layout :: header"></header>
+
+<div class="container mt-3">
+	<div class="card">
+		<div class="card-header" th:text="${titulo}"></div>
+		<div class="card-body">
+
+			<h4 class="card-title">
+				<a th:href="@{'/ver/' + ${factura.cliente.id}}" class="btn btn-dark btn-sm">&laquo; volver</a>
+				<a th:href="@{'/factura/ver/'+${factura.id}(format=pdf)}" class="btn btn-danger float-right mx-2">Exportar a PDF</a>
+				<a th:href="@{'/factura/ver/'+${factura.id}(format=xlsx)}" class="btn btn-success float-right">Exportar a Excel</a>
+			</h4>
+
+			<ul class="list-group my-2">
+				<li class="list-group-item list-group-item-primary" th:text="'Datos del cliente'"></li>
+				<li class="list-group-item" th:text="${factura.cliente}"></li>
+				<li class="list-group-item" th:text="${factura.cliente.email}"></li>
+			</ul>
+			<ul class="list-group">
+				<li class="list-group-item list-group-item-success" th:text="'Datos de la factura'"></li>
+				<li class="list-group-item" th:text="'Id: ' + ${factura.id}"></li>
+				<li class="list-group-item" th:text="'Descripción: ' + ${factura.descripcion}"></li>
+				<li class="list-group-item" th:text="'Fecha: ' + ${factura.createAt}"></li>
+			</ul>
+			
+			<div class="alert alert-danger mt-4" role="alert" th:if="${#lists.isEmpty(factura.detalleFactura)}" 
+			 th:text="'No hay lineas para la factura' + ${factura.descripcion}"></div>
+			
+			<table class="table table-striped table-hover mt-3" th:if="${not #lists.isEmpty(factura.detalleFactura)}">
+				<thead class="font-weight-bold">
+					<tr>
+						<td>PRODUCTO</td>
+						<td>PRECIO</td>
+						<td>CANTIDAD</td>
+						<td>TOTAL</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each=" linea : ${factura.detalleFactura}">
+						<td th:text="${linea.producto.nombre}"></td>
+						<td th:text="${linea.producto.precio}"></td>
+						<td th:text="${linea.cantidad}"></td>
+						<td th:text="${'$' + linea.calcularTotal()}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<h5 class="float-right">Total <span class="badge badge-success" th:text="${'$' + factura.total}"></span></h5>
+			
+			<div class="card border-info mb-4" style="max-width: 20rem;">
+				<div class="card-header">Observaciones</div>
+				<div class="card-body">
+					<p class="card-text" th:text="${factura.observacion}" th:if="${not #strings.isEmpty(factura.observacion)}"></p>
+					<h4 class="card-title" th:if="${#strings.isEmpty(factura.observacion)}">No tiene observaciones</h4>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<footer th:replace="layout/layout :: head"></footer>
+</body>
+</html>

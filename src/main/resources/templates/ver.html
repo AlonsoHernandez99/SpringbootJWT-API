@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head">
+</head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container m-4">
+		<div class="card">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+			<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/factura/form/} + ${cliente.id}"
+								class="btn btn-dark mb-3">Crear factura</a>
+				<img th:if="${#strings.length(cliente.foto) > 0}"
+					class="img-thumbnail rounded float-left" width="15%"
+					th:src="@{'/uploads/' + ${cliente.foto}}" th:alt="${cliente.foto}" />
+				<ul class="list-group">
+					<li class="list-group-item" th:text="${cliente.nombre}"></li>
+					<li class="list-group-item" th:text="${cliente.apellido}"></li>
+					<li class="list-group-item" th:text="${cliente.email}"></li>
+					<li class="list-group-item" th:text="${cliente.createAt}"></li>
+				</ul>
+				<div th:if="${#lists.isEmpty(cliente.facturas)}"
+					th:text="'No hay facturas asignadas a este cliente: ' + ${cliente.nombre}+' '+ ${cliente.apellido}"
+					class="alert alert-info mt-4 font-weight-bold"></div>
+				<table class="table table-striped mt-3"
+					th:if="${not #lists.isEmpty(cliente.facturas)}">
+					<thead class="thead-dark">
+						<tr>
+							<th>ID</th>
+							<th>DESCRIPCION</th>
+							<th>FECHA</th>
+							<th>TOTAL</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">OPCIONES</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="factura : ${cliente.facturas}">
+							<td th:text="${factura.id}"></td>
+							<td th:text="${factura.descripcion}"></td>
+							<td th:text="${factura.createAt}"></td>
+							<td th:text="'$'+${factura.total}"></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')">
+								<a th:href="@{'/factura/ver/' + ${factura.id}}" class="btn btn-info btn-sm">Detalle</a>&nbsp;
+								<a th:href="@{'/factura/delete/' + ${factura.id}}" class="btn btn-danger btn-sm" 
+									onclick="return confirm('¿Estás seguro de eliminar la factura?')" >Eliminar</a>							
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
