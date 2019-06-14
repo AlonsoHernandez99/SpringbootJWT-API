@@ -29,7 +29,7 @@ public class JWTServiceImpl implements JWTService {
 	
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
-	public static final String SECRET = Base64Utils.encodeToString("Hola.Clave.Alonso.12345.Alguna.Clave.Secreta".getBytes());
+	public static final String SECRET = Base64Utils.encodeToString("Hello.From.Another.Api.In.SpringBoot".getBytes());
 	
 	public static final long EXPIRATION_DATE = 3600000L;
 	
